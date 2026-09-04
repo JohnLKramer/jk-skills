@@ -5,7 +5,7 @@ description: Use when designing typed APIs, writing specs or implementation plan
 
 # Honoring Declared Types
 
-Declared types are contracts. Every `PrimaryPayable` must work.
+If a function takes PrimaryPayable, every PrimaryPayable must work.
 
 The Liskov Substitution Principle requires every subtype to work without runtime narrowing: the declared type must be true.
 
@@ -19,28 +19,28 @@ YAGNI: skip playlist locking by calling `lockReservationId` from `processReserva
 
 - Tests, fixture type known
 - Trust boundaries: JSON, JDBC, Java `Any` / `Object`
-- Sealed exhaustive `when` on the parameter
 
 Equivalent lies: `as` on a production parameter; `as?` whose else skips, returns, or throws; `is` plus smart cast on a production parameter; `require(x is T)`; `when` with `else throw`; "playlist is a non-goal" as a reason.
 
-`as?` with else that handles every other subtype matches sealed exhaustive `when`. A silent skip does not.
+Allowed: sealed exhaustive `when`, including equivalent `as?` handling every subtype. Not allowed: silent skip or `is` plus smart cast elsewhere on a production parameter.
 
 ## Example
 
 Wrong:
 
 ```kotlin
-fun processPrimaryPayableInTransaction(event: PrimaryPayable): PayableTrack? {
+fun processPrimaryPayableInTransaction(event: PrimaryPayable) {
     lockDao.lockReservationId((event as ReservationPriceEvent).reservationId)
+    // ...
 }
 ```
 
 Right:
 
 ```kotlin
-fun processReservationPriceEvent(event: ReservationPriceEvent): PayableTrack? {
+fun processReservationPriceEvent(event: ReservationPriceEvent) {
     lockDao.lockReservationId(event.reservationId)
-    return processPrimaryPayableInTransaction(event)
+    processPrimaryPayableInTransaction(event)
 }
 ```
 
@@ -48,13 +48,13 @@ fun processReservationPriceEvent(event: ReservationPriceEvent): PayableTrack? {
 
 ## Design and plans
 
-Do not downcast in spec or plan example code to scope a cut. Call from the typed entry, add to the declared type, or keep it out of the shared method.
+Never downcast in plan examples to scope a cut. Use the typed entry, declared-type member, or omit shared work.
 
-When a cut skips a subtype, its non-goal MUST state what that subtype does not do yet: for example, "playlist posting does not take this lock yet" or "playlist posting does not call `lockPlaylistEventId`." "Leave X unchanged" is not explicit enough. Never encode a downcast.
+When skipping a subtype, a plan's non-goal MUST state what it does not do yet; e.g., "playlist posting does not take this lock yet" or "playlist posting does not call `lockPlaylistEventId`." "Leave X unchanged" is not explicit. Never encode a downcast.
 
 ## Implementation
 
-Do not copy a plan-mandated downcast. Move the call, make it polymorphic, or keep the parameter as the type you need.
+A plan encoding the lie is bad because implementers copy plans faithfully. Do not copy its downcast: move the call, use polymorphism, or narrow the parameter.
 
 ## Review
 
