@@ -44,13 +44,13 @@ fun processReservationPriceEvent(event: ReservationPriceEvent): PayableTrack? {
 }
 ```
 
-Lock identity on `PrimaryPayable` is also right when the work is truly shared. Not required for a reservation-only cut.
+`PrimaryPayable` lock identity also works when truly shared; not needed for a reservation-only cut.
 
 ## Design and plans
 
 Do not downcast in spec or plan example code to scope a cut. Call from the typed entry, add to the declared type, or keep it out of the shared method.
 
-Every plan's non-goal MUST say "playlist posting does not take this lock yet" or "playlist posting does not call `lockPlaylistEventId`." "Leave playlist locking unchanged" is not explicit enough. Do not encode a downcast in the non-goal.
+When a cut skips a subtype, its non-goal MUST state what that subtype does not do yet: for example, "playlist posting does not take this lock yet" or "playlist posting does not call `lockPlaylistEventId`." "Leave X unchanged" is not explicit enough. Never encode a downcast.
 
 ## Implementation
 
