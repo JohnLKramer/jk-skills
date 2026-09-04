@@ -5,15 +5,15 @@ description: Use when designing typed APIs, writing specs or implementation plan
 
 # Honoring Declared Types
 
-The declared type is the contract. If a function takes `PrimaryPayable`, every `PrimaryPayable` must work.
+Declared types are contracts. Every `PrimaryPayable` must work.
 
-Liskov substitution means every subtype works without runtime narrowing. For agents: declared types must be true.
+The Liskov Substitution Principle requires every subtype to work without runtime narrowing: the declared type must be true.
 
 ## Implementation rule
 
 Subtype-specific work stays at the typed call site, or it becomes polymorphic: a member on the declared type, or a sealed exhaustive `when` on the parameter.
 
-For a reservation-only cut, call `lockReservationId` from the typed `processReservationPriceEvent`. Do not cast in the shared method.
+YAGNI: skip playlist locking by calling `lockReservationId` from `processReservationPriceEvent`; do not write `(event as ReservationPriceEvent)` in the shared method.
 
 ## Allowed recoveries
 
@@ -21,7 +21,7 @@ For a reservation-only cut, call `lockReservationId` from the typed `processRese
 - Trust boundaries: JSON, JDBC, Java `Any` / `Object`
 - Sealed exhaustive `when` on the parameter
 
-Equivalent lies: `as` on a production parameter; `as?` whose else skips, returns, or throws; smart casts; `require(x is T)`; `when` with `else throw`.
+Equivalent lies: `as` on a production parameter; `as?` whose else skips, returns, or throws; smart casts; `require(x is T)`; `when` with `else throw`; "playlist is a non-goal" as a reason.
 
 `as?` with else that handles every other subtype matches sealed exhaustive `when`. A silent skip does not.
 
