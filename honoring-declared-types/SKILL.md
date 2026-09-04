@@ -7,13 +7,13 @@ description: Use when designing typed APIs, writing specs or implementation plan
 
 The declared type is the contract. If a function takes `PrimaryPayable`, every `PrimaryPayable` must work.
 
-That is the Liskov Substitution Principle: a subtype must be usable anywhere the base type is declared, without the callee inspecting or narrowing the runtime type. For agents: the declared type must be true.
+Liskov substitution means every subtype works without runtime narrowing. For agents: declared types must be true.
 
 ## Implementation rule
 
 Subtype-specific work stays at the typed call site, or it becomes polymorphic: a member on the declared type, or a sealed exhaustive `when` on the parameter.
 
-YAGNI: skip playlist locking by calling `lockReservationId` from `processReservationPriceEvent`, which already takes `ReservationPriceEvent`. Do not write `(event as ReservationPriceEvent)` in the shared method.
+For a reservation-only cut, call `lockReservationId` from the typed `processReservationPriceEvent`. Do not cast in the shared method.
 
 ## Allowed recoveries
 
@@ -21,7 +21,7 @@ YAGNI: skip playlist locking by calling `lockReservationId` from `processReserva
 - Trust boundaries: JSON, JDBC, Java `Any` / `Object`
 - Sealed exhaustive `when` on the parameter
 
-Same lie as `as`: `as` on a production parameter; `as?` whose else skips, returns, or throws; `is` plus smart cast; `require(x is T)`; `when` with `else throw`; "playlist is a non-goal" as the reason.
+Equivalent lies: `as` on a production parameter; `as?` whose else skips, returns, or throws; smart casts; `require(x is T)`; `when` with `else throw`.
 
 `as?` with else that handles every other subtype matches sealed exhaustive `when`. A silent skip does not.
 
@@ -48,7 +48,9 @@ Lock identity on `PrimaryPayable` is also right when the work is truly shared. N
 
 ## Design and plans
 
-Do not downcast in spec or plan example code to scope a cut. Call from the typed entry, add to the declared type, or keep it out of the shared method. Write "playlist posting does not take this lock yet," not `(event as ReservationPriceEvent)`.
+Do not downcast in spec or plan example code to scope a cut. Call from the typed entry, add to the declared type, or keep it out of the shared method.
+
+Every plan's non-goal MUST say "playlist posting does not take this lock yet" or "playlist posting does not call `lockPlaylistEventId`." "Leave playlist locking unchanged" is not explicit enough. Do not encode a downcast in the non-goal.
 
 ## Implementation
 
