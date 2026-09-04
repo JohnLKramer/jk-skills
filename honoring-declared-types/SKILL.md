@@ -11,7 +11,7 @@ The Liskov Substitution Principle requires every subtype to work without runtime
 
 ## Implementation rule
 
-Subtype-specific work stays at the typed call site, or it becomes polymorphic: a member on the declared type, or a sealed exhaustive `when` on the parameter.
+Keep subtype-specific work at the typed call site or make it polymorphic: a declared-type member or sealed exhaustive `when`.
 
 YAGNI: skip playlist locking by calling `lockReservationId` from `processReservationPriceEvent`; do not write `(event as ReservationPriceEvent)` in the shared method.
 
@@ -21,7 +21,7 @@ YAGNI: skip playlist locking by calling `lockReservationId` from `processReserva
 - Trust boundaries: JSON, JDBC, Java `Any` / `Object`
 - Sealed exhaustive `when` on the parameter
 
-Equivalent lies: `as` on a production parameter; `as?` whose else skips, returns, or throws; smart casts; `require(x is T)`; `when` with `else throw`; "playlist is a non-goal" as a reason.
+Equivalent lies: `as` on a production parameter; `as?` whose else skips, returns, or throws; `is` plus smart cast on a production parameter; `require(x is T)`; `when` with `else throw`; "playlist is a non-goal" as a reason.
 
 `as?` with else that handles every other subtype matches sealed exhaustive `when`. A silent skip does not.
 
