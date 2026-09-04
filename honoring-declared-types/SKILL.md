@@ -56,7 +56,7 @@ Do not copy a plan-mandated downcast. Move the call, make it polymorphic, or kee
 
 ## Review
 
-A parameter downcast is Important even when the plan specified it. Name the declared type, the recovered type, and which future subtype breaks. Not Minor. Sealed exhaustive `when`, test casts, and trust-boundary casts are not findings. The human may defer the product fix. The review still calls the lie.
+A parameter downcast is Important even when the plan specified it. Name the declared type, the recovered type, and a concrete future subtype that breaks (for example, `PlaylistReservationEvent`), not just a vague future implementation. Not Minor. Sealed exhaustive `when`, test casts, and trust-boundary casts are not findings. The human may defer the product fix. The review still calls the lie.
 
 ## Excuses that still fail
 
