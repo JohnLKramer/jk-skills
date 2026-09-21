@@ -39,7 +39,9 @@ Liquibase `--changeset` lines are identifiers, not documentation. Do not hang no
 - "TODO is standard" — unfinished work goes in chat.
 - "Public API requires KDoc" — only if the signature is not enough.
 - "This copy should be documented too" — a repeated pattern is one pattern; comment the first canonical instance if needed, not every mirror.
-- "I'm documenting the work" — document the code, not the change.
+- "I'm documenting the work" — document the code, not the change. Naming the prior class and giving the reason for switching off it is the change, not the code:
+  `// Uses EventProcessor (not PaymentsQueueProcessor) so a task failure logs the actual exception with its stack trace.`
+  A reader with no memory of `PaymentsQueueProcessor` gets nothing from this once the migration is old news. Drop it, or state the current class's own invariant with no comparison: `// Failures log with the exception's stack trace, not just its toString().`
 - "The file's untracked, so the link can't resolve yet" — pasting the URL anyway doesn't make it resolve; name the code, don't guess at a future URL.
 - "I'm explaining why the skip happens" — a reason for the same branch is still that branch in prose (`// Skipped so a rerun doesn't post twice` beside `if (status != ENQUEUED) continue`). State the invariant the code doesn't show, not a rationale for the visible condition.
 
