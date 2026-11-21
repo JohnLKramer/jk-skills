@@ -3,22 +3,22 @@ name: selecting-superpowers-models-without-local-proxy
 description: Use when starting a new task from the Superpowers framework when not connected to a local LLM proxy
 ---
 
-When starting a new task from the Superpowers framework in Claude Code, select the model from the list below
+When starting a new task from the Superpowers framework, select the model from the list below
 
-* brainstorming: opus
-* finishing-a-development-branch: haiku
-* subagent-driven-development: sonnet for the controller and implementers, opus for the final review
-* using-git-worktrees: haiku
-* writing-plans: opus
-* dispatching-parallel-agents: sonnet for the dispatcher, each subagent sized to its own task
-* receiving-code-review: sonnet
-* systematic-debugging: opus
-* writing-skills: sonnet for drafting, pressure tests on the model the skill will run on
-* executing-plans: sonnet
-* requesting-code-review: opus for whole-branch reviews, sonnet for per-task reviews
-* test-driven-development: sonnet
-* verification-before-completion: sonnet
-
+* brainstorming: Claude Opus 5.5 Medium
+* finishing-a-development-branch: Claude Haiku 5.5
+* subagent-driven-development: Claude Opus 5.5
+* using-git-worktrees: Claude Haiku 5.5
+* writing-plans: Claude Sonnet 5.5
+* dispatching-parallel-agents: Claude Sonnet 5.5
+* receiving-code-review: Claude Haiku 5.5
+* systematic-debugging: Claude Opus 5.5
+* using-superpowers: Claude Opus 5.5
+* writing-skills: Claude Sonnet 5.5
+* executing-plans: Claude Haiku 5.5
+* requesting-code-review: Claude Haiku 5.5
+* test-driven-development: Claude Sonnet 5.5
+* verification-before-completion: Claude Haiku 5.5
 When starting a new task from the Superpowers framework in Cursor, select the model from the list below
 
 * brainstorming: Claude Opus 5.5

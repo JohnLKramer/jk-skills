@@ -7,9 +7,8 @@ Each skill is a directory holding a single `SKILL.md`: YAML frontmatter with a
 is the trigger — it states the conditions under which an agent should load the
 skill, so most harnesses can decide on their own when a skill is relevant.
 
-The guidance is written for JVM services (Kotlin and Java) backed by Postgres,
-with a bias toward review-time enforcement: each skill names the wrong shape,
-the right shape, and the excuses that still fail.
+The guidance is written with a bias toward review-time enforcement: 
+each skill names the wrong shape, the right shape, and the excuses that still fail.
 
 ## Skills
 
