@@ -15,6 +15,9 @@ the right shape, and the excuses that still fail.
 
 | Skill | Load it when | Core rule |
 |-------|--------------|-----------|
+| [gemini-advisor](gemini-advisor/SKILL.md) | Hitting a small design fork mid-task in a repo with `.advisor/` | Send minor forks to the advisor, log every call, and escalate low confidence or anything major to the human. |
+| [gemini-advisor-init](gemini-advisor-init/SKILL.md) | Setting up or revising the advisor's project guidance | Turn the stated ethos into validated `.advisor/guidance.json` through a survey that resolves gaps and conflicts. |
+| [gemini-evaluate](gemini-evaluate/SKILL.md) | Reviewing the advisor's past decisions with the human | Re-rule a sample of applied decisions; rulings feed the advisor's next calls and guidance updates. |
 | [honoring-declared-types](honoring-declared-types/SKILL.md) | Designing typed APIs, or reviewing code that downcasts, uses `as`, or recovers a narrower type from a parameter | If a function takes a supertype, every subtype must work. Keep subtype-specific work at the typed call site or make it polymorphic. |
 | [jvm-structured-logging](jvm-structured-logging/SKILL.md) | Writing or editing a log call in a repo with logstash-logback `StructuredArguments` on the classpath | The message is a string literal. Values go in snake_case `StructuredArguments` fields, and a `Throwable` is the last argument. |
 | [liquibase-postgres-migrations](liquibase-postgres-migrations/SKILL.md) | Writing Liquibase formatted SQL for Postgres, or debugging `Unterminated dollar quote` failures | Any changeset containing dollar quotes (`$$`, `$BODY$`) needs `splitStatements:false`. |
