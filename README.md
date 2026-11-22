@@ -2,7 +2,7 @@
 
 LLM skills that I have created.
 
-Each skill is a directory holding a single `SKILL.md`: YAML frontmatter with a
+Skills live in `skills/`. Each is a directory holding a `SKILL.md`: YAML frontmatter with a
 `name` and a `description`, followed by the guidance itself. The `description`
 is the trigger — it states the conditions under which an agent should load the
 skill, so most harnesses can decide on their own when a skill is relevant.
@@ -10,20 +10,32 @@ skill, so most harnesses can decide on their own when a skill is relevant.
 The guidance is written with a bias toward review-time enforcement: 
 each skill names the wrong shape, the right shape, and the excuses that still fail.
 
+## Layout
+
+```
+skills/<name>/SKILL.md   agent-facing trigger and procedure
+standards/<topic>.md     canonical standards, readable without any agent tooling
+```
+
+A skill that needs a standard links to it with a relative symlink (for example
+`skills/nextjs-project-setup/standards.md -> ../../standards/nextjs.md`). Standards
+never point back at skills. Copy a skill out of the repo with `cp -RL` so the
+symlink is replaced by the file.
+
 ## Skills
 
 | Skill | Load it when | Core rule |
 |-------|--------------|-----------|
-| [gemini-advisor](gemini-advisor/SKILL.md) | Hitting a small design fork mid-task in a repo with `.advisor/` | Send minor forks to the advisor, log every call, and escalate low confidence or anything major to the human. |
-| [gemini-advisor-init](gemini-advisor-init/SKILL.md) | Setting up or revising the advisor's project guidance | Turn the stated ethos into validated `.advisor/guidance.json` through a survey that resolves gaps and conflicts. |
-| [gemini-evaluate](gemini-evaluate/SKILL.md) | Reviewing the advisor's past decisions with the human | Re-rule a sample of applied decisions; rulings feed the advisor's next calls and guidance updates. |
-| [honoring-declared-types](honoring-declared-types/SKILL.md) | Designing typed APIs, or reviewing code that downcasts, uses `as`, or recovers a narrower type from a parameter | If a function takes a supertype, every subtype must work. Keep subtype-specific work at the typed call site or make it polymorphic. |
-| [jvm-structured-logging](jvm-structured-logging/SKILL.md) | Writing or editing a log call in a repo with logstash-logback `StructuredArguments` on the classpath | The message is a string literal. Values go in snake_case `StructuredArguments` fields, and a `Throwable` is the last argument. |
-| [liquibase-postgres-migrations](liquibase-postgres-migrations/SKILL.md) | Writing Liquibase formatted SQL for Postgres, or debugging `Unterminated dollar quote` failures | Any changeset containing dollar quotes (`$$`, `$BODY$`) needs `splitStatements:false`. |
-| [mock-behavior-not-data](mock-behavior-not-data/SKILL.md) | Introducing mocks in unit tests, or choosing between a real instance and a mock for a collaborator | Mock behavior you need to control. Construct values — DTOs, data classes, exceptions — with their real constructor or builder. |
-| [nextjs-project-setup](nextjs-project-setup/SKILL.md) | Creating a Next.js project, or adding lint, test, and hook tooling to a Next.js app that fronts a backend | Run `scripts/scaffold.sh`. Node and pnpm are pinned by mise, and every standard in `standards.md` has a tool that enforces it. |
-| [one-reason-to-change](one-reason-to-change/SKILL.md) | Designing modules, or reviewing code that adds methods, dependencies, or logic to an existing class | A separate reason to change lives in a separate module. Call it from the cut site instead of embedding foreign logic. |
-| [writing-code-comments](writing-code-comments/SKILL.md) | Writing or editing comments — inline, KDoc, Javadoc, SQL, or notes beside Liquibase SQL | A comment documents the code, not the change. Say why, and drop anything that only helps someone carrying the current ticket. |
+| [gemini-advisor](skills/gemini-advisor/SKILL.md) | Hitting a small design fork mid-task in a repo with `.advisor/` | Send minor forks to the advisor, log every call, and escalate low confidence or anything major to the human. |
+| [gemini-advisor-init](skills/gemini-advisor-init/SKILL.md) | Setting up or revising the advisor's project guidance | Turn the stated ethos into validated `.advisor/guidance.json` through a survey that resolves gaps and conflicts. |
+| [gemini-evaluate](skills/gemini-evaluate/SKILL.md) | Reviewing the advisor's past decisions with the human | Re-rule a sample of applied decisions; rulings feed the advisor's next calls and guidance updates. |
+| [honoring-declared-types](skills/honoring-declared-types/SKILL.md) | Designing typed APIs, or reviewing code that downcasts, uses `as`, or recovers a narrower type from a parameter | If a function takes a supertype, every subtype must work. Keep subtype-specific work at the typed call site or make it polymorphic. |
+| [jvm-structured-logging](skills/jvm-structured-logging/SKILL.md) | Writing or editing a log call in a repo with logstash-logback `StructuredArguments` on the classpath | The message is a string literal. Values go in snake_case `StructuredArguments` fields, and a `Throwable` is the last argument. |
+| [liquibase-postgres-migrations](skills/liquibase-postgres-migrations/SKILL.md) | Writing Liquibase formatted SQL for Postgres, or debugging `Unterminated dollar quote` failures | Any changeset containing dollar quotes (`$$`, `$BODY$`) needs `splitStatements:false`. |
+| [mock-behavior-not-data](skills/mock-behavior-not-data/SKILL.md) | Introducing mocks in unit tests, or choosing between a real instance and a mock for a collaborator | Mock behavior you need to control. Construct values — DTOs, data classes, exceptions — with their real constructor or builder. |
+| [nextjs-project-setup](skills/nextjs-project-setup/SKILL.md) | Creating a Next.js project, or adding lint, test, and hook tooling to a Next.js app that fronts a backend | Run `scripts/scaffold.sh`. Node and pnpm are pinned by mise, and every standard in [`standards/nextjs.md`](standards/nextjs.md) has a tool that enforces it. |
+| [one-reason-to-change](skills/one-reason-to-change/SKILL.md) | Designing modules, or reviewing code that adds methods, dependencies, or logic to an existing class | A separate reason to change lives in a separate module. Call it from the cut site instead of embedding foreign logic. |
+| [writing-code-comments](skills/writing-code-comments/SKILL.md) | Writing or editing comments — inline, KDoc, Javadoc, SQL, or notes beside Liquibase SQL | A comment documents the code, not the change. Say why, and drop anything that only helps someone carrying the current ticket. |
 
 ## Using the skills
 
@@ -46,7 +58,7 @@ every project) or `.claude/skills/<name>/SKILL.md` (one project). Symlink so
 
 ```bash
 mkdir -p ~/.claude/skills
-for dir in ~/src/jk-skills/*/; do
+for dir in ~/src/jk-skills/skills/*/; do
   [ -f "$dir/SKILL.md" ] || continue
   ln -sfn "${dir%/}" ~/.claude/skills/"$(basename "${dir%/}")"
 done
@@ -65,7 +77,7 @@ copy. Run this from the repo you want the rules in:
 
 ```bash
 mkdir -p .cursor/rules
-for file in ~/src/jk-skills/*/SKILL.md; do
+for file in ~/src/jk-skills/skills/*/SKILL.md; do
   name=$(basename "$(dirname "$file")")
   awk -v extra='globs: ["**/*.kt", "**/*.java", "**/*.sql"]\nalwaysApply: false' '
     NR == 1 && $0 == "---" { print; next }
@@ -92,12 +104,12 @@ the path, and let it open the file when the trigger fires:
 
 Before doing the matching work, read the skill file and follow it exactly.
 
-- `~/src/jk-skills/jvm-structured-logging/SKILL.md` — writing or editing a log call in Kotlin or Java.
-- `~/src/jk-skills/liquibase-postgres-migrations/SKILL.md` — writing Liquibase formatted SQL for Postgres.
-- `~/src/jk-skills/mock-behavior-not-data/SKILL.md` — introducing mocks in a unit test.
-- `~/src/jk-skills/one-reason-to-change/SKILL.md` — adding methods, dependencies, or logic to an existing class.
-- `~/src/jk-skills/honoring-declared-types/SKILL.md` — designing a typed API, or reviewing a downcast.
-- `~/src/jk-skills/writing-code-comments/SKILL.md` — writing or editing a comment.
+- `~/src/jk-skills/skills/jvm-structured-logging/SKILL.md` — writing or editing a log call in Kotlin or Java.
+- `~/src/jk-skills/skills/liquibase-postgres-migrations/SKILL.md` — writing Liquibase formatted SQL for Postgres.
+- `~/src/jk-skills/skills/mock-behavior-not-data/SKILL.md` — introducing mocks in a unit test.
+- `~/src/jk-skills/skills/one-reason-to-change/SKILL.md` — adding methods, dependencies, or logic to an existing class.
+- `~/src/jk-skills/skills/honoring-declared-types/SKILL.md` — designing a typed API, or reviewing a downcast.
+- `~/src/jk-skills/skills/writing-code-comments/SKILL.md` — writing or editing a comment.
 ```
 
 Codex can only read paths it is allowed to reach. If the clone sits outside the
@@ -126,9 +138,9 @@ beside `GEMINI.md`:
 
 ```bash
 mkdir -p ~/.gemini/skills
-for dir in ~/src/jk-skills/*/; do
+for dir in ~/src/jk-skills/skills/*/; do
   [ -f "$dir/SKILL.md" ] || continue
-  cp -R "${dir%/}" ~/.gemini/skills/
+  cp -RL "${dir%/}" ~/.gemini/skills/
 done
 ```
 
@@ -144,7 +156,7 @@ path-specific form takes an `applyTo` glob, so convert the frontmatter:
 
 ```bash
 mkdir -p .github/instructions
-for file in ~/src/jk-skills/*/SKILL.md; do
+for file in ~/src/jk-skills/skills/*/SKILL.md; do
   name=$(basename "$(dirname "$file")")
   awk -v extra='applyTo: "**/*.kt,**/*.java,**/*.sql"' '
     NR == 1 && $0 == "---" { print; next }
