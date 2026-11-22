@@ -1,0 +1,47 @@
+[tools]
+node = "__NODE__"
+pnpm = "__PNPM__"
+
+[tasks.dev]
+description = "Start the dev server"
+run = "pnpm dev"
+
+[tasks.lint]
+description = "ESLint, zero warnings"
+run = "pnpm exec eslint . --max-warnings 0"
+
+[tasks.format]
+description = "Format with Prettier"
+run = "pnpm exec prettier --write ."
+
+[tasks."format:check"]
+description = "Check Prettier formatting"
+run = "pnpm exec prettier --check ."
+
+[tasks.typecheck]
+description = "tsc, no file arguments so tsconfig applies"
+run = "pnpm exec tsc --noEmit"
+
+[tasks.deps]
+description = "Layer and cycle rules, then dead code"
+run = ["pnpm exec depcruise src --config .dependency-cruiser.cjs", "pnpm exec knip"]
+
+[tasks.test]
+description = "Vitest unit, component and BFF tests"
+run = "pnpm exec vitest run"
+
+[tasks.e2e]
+description = "Playwright end to end (needs a built app)"
+run = "pnpm exec playwright test"
+
+[tasks.build]
+description = "Production build"
+run = "pnpm build"
+
+[tasks.check]
+description = "Everything that must pass before work is done"
+depends = ["lint", "format:check", "typecheck", "deps", "test"]
+
+[tasks.ci]
+description = "check, build, then e2e"
+run = [{ task = "check" }, { task = "build" }, { task = "e2e" }]

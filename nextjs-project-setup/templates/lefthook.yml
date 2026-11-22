@@ -1,0 +1,13 @@
+pre-commit:
+  commands:
+    format:
+      glob: "*.{ts,tsx,js,mjs,cjs,json,css,md}"
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
+    lint:
+      glob: "*.{ts,tsx,js,mjs}"
+      run: pnpm exec eslint --max-warnings 0 {staged_files}
+pre-push:
+  commands:
+    typecheck:
+      run: mise run typecheck
