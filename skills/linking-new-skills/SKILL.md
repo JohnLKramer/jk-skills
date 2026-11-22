@@ -27,7 +27,7 @@ Match the existing convention in `~/.agents/skills/`: the link name equals the s
 
 | Skill created in | Symlink target |
 |---|---|
-| `~/source/personal/jk-skills/foo/` | `~/.agents/skills/foo -> ~/source/personal/jk-skills/foo` |
+| `~/source/personal/jk-skills/skills/foo/` | `~/.agents/skills/foo -> ~/source/personal/jk-skills/skills/foo` |
 | `~/source/classpass/agents/skills/bar/` | `~/.agents/skills/bar -> ~/source/classpass/agents/skills/bar` |
 
 ## Common Mistakes

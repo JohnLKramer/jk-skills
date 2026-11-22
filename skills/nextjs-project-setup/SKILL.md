@@ -61,6 +61,6 @@ your config.
 
 ## Editing the standards
 
-`standards.md` is the source of truth. If you add a rule, add its enforcement
+`standards.md` here is a symlink to `standards/nextjs.md` at the repo root, which is the source of truth. Edit that file. If you add a rule, add its enforcement
 to a template and to the "What you get" table. A rule with no tool behind it is
 marked **review** in the standards, so the gap stays visible.
